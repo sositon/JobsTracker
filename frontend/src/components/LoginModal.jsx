@@ -5,10 +5,9 @@ import axios from 'axios';
 const LoginModal = ({ show, handleClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(''); // For handling error messages
-  const [loading, setLoading] = useState(false); // For showing a loading state
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  // Function to handle form submission
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true); 
@@ -21,7 +20,7 @@ const LoginModal = ({ show, handleClose }) => {
       console.log(response.data);
       setLoading(false);
       setError('');
-      handleClose(response); // Close the modal
+      handleClose(response);
     } catch (err) {
       setLoading(false);
       setError('Login failed. Please check your credentials.');
