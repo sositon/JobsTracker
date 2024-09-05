@@ -21,7 +21,11 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     bcrypt.init_app(app)
     jwt.init_app(app)
-    cors.init_app(app)
+    # Apply CORS globally with specific origins and allow headers
+    cors.init_app(app, resources={r"/*": {"origins": "http://localhost:3000"}},
+                  supports_credentials=True,
+                  allow_headers=["Content-Type", "Authorization"],
+                  methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
 
     from app.routes import auth, job_applications
     app.register_blueprint(auth.bp)

@@ -1,20 +1,33 @@
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from './components/Header';
+import axios from 'axios';
+
+
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = "csrf_access_token";
+axios.defaults.xsrfHeaderName = "X-CSRF-TOKEN";
+
+
+const onClick = () => {
+  axios.get(`${process.env.REACT_APP_API_URL}/auth/me`, 
+    {
+      withCredentials: true,
+    })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
 function App() {
   return (
     <div>
+      <Header />
       <header>
-        <button
-          onClick={() => {
-            fetch("http://127.0.0.1:5000/api/v1/auth/", {})
-              .then((response) => {
-                if (!response.ok) {
-                  throw new Error('Network response was not ok ' + response.statusText);
-                }
-                return response.json();
-              })
-              .then((data) => console.log(data))
-              .catch((error) => console.error('There was a problem with the fetch operation:', error));
-          }}
-        >
+        <button onClick={onClick}>
           GET SOME DATA
         </button>
       </header>

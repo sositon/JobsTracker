@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import set_access_cookies, create_access_token, jwt_required, get_jwt_identity, unset_jwt_cookies
 from app.models.user import User
 from app import db
 
@@ -32,10 +32,24 @@ def register():
 def login():
     data = request.get_json()
     user = User.query.filter_by(email=data['email']).first()
+
     if user and user.check_password(data['password']):
         access_token = create_access_token(identity=user.id)
-        return jsonify(access_token=access_token), 200
+        response = jsonify({"msg": "Login successful!"})
+        set_access_cookies(response, access_token)
+        return response, 200
+
     return jsonify({"msg": "Invalid email or password"}), 401
+
+
+# logout route
+@bp.route('/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    response = jsonify({"msg": "Logout successful!"})
+    unset_jwt_cookies(response)
+    return response, 200
+
 
 @bp.route('/me', methods=['GET'])
 @jwt_required()
