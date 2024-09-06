@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { Home, LogOutIcon } from 'lucide-react';
 import LoginModal from './LoginModal';
+import RegisterModal from './RegisterModal';
 import axios from 'axios';
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/auth/me`)
@@ -16,7 +18,9 @@ const Header = () => {
         }
       })
       .catch((err) => {
-        console.error(err);
+        if (err.response?.status === 401) {
+          console.log('User is not logged in');
+        }
       });
   }, []);
 
@@ -66,7 +70,15 @@ const Header = () => {
         </Container>
       </Navbar>
 
-      <LoginModal show={showLoginModal} handleClose={loginModalClose}/>
+      <LoginModal show={showLoginModal} handleClose={loginModalClose} toggleToRegister={() => {
+        setShowLoginModal(false); 
+        setShowRegisterModal(true);
+      }}/>
+
+      <RegisterModal show={showRegisterModal} handleClose={() => setShowRegisterModal(false)} toggleToLogin={() => {
+        setShowRegisterModal(false); 
+        setShowLoginModal(true);
+      }}/>
     </>
   );
 };
