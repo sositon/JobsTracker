@@ -9,6 +9,9 @@ on:
 jobs:
   build-backend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend 
     
     steps:
     - uses: actions/checkout@v2
@@ -18,9 +21,9 @@ jobs:
         python-version: '3.7'
     - name: Install Python dependencies
       run: |
-        pip install -r backend/requirements.txt
+        pip install -r requirements.txt
     - name: Validate Environment
-      run: python backend/validate_env.py
+      run: python validate_env.py
       env:
         FLASK_APP: run.py
         FLASK_ENV: development
