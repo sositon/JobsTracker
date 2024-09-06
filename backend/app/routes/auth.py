@@ -23,9 +23,7 @@ def register():
     # save user to database
     db.session.add(user)
     db.session.commit()
-    # Create access token
-    access_token = create_access_token(identity=user.id)
-    return jsonify(access_token=access_token), 201
+    return jsonify({"msg": "Register successful!"}), 201
 
 
 @bp.route('/login', methods=['POST'])

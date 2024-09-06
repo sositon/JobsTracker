@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import axios from 'axios';
 
-const LoginModal = ({ show, handleClose }) => {
+const LoginModal = ({ show, handleClose, toggleToRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -14,7 +14,7 @@ const LoginModal = ({ show, handleClose }) => {
     setError('');
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
-        email,
+        "email": email.toLowerCase(),
         password,
       });
       console.log(response.data);
@@ -36,6 +36,7 @@ const LoginModal = ({ show, handleClose }) => {
       <Modal.Body>
         {error && <Alert variant="danger">{error}</Alert>}
         <Form onSubmit={handleLogin}>
+
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control
@@ -66,6 +67,14 @@ const LoginModal = ({ show, handleClose }) => {
           >
             {loading ? 'Logging in...' : 'Login'}
           </Button>
+
+          <Form.Text className="text-center">
+            Don't have an account yet? 
+            <span style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }} onClick={toggleToRegister}>
+            Register here
+            </span>
+          </Form.Text>
+
         </Form>
       </Modal.Body>
     </Modal>
