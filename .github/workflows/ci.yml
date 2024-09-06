@@ -21,10 +21,13 @@ jobs:
         pip install -r backend/requirements.txt
     - name: Check if Flask runs
       run: |
-        python backend/run.py
+        python backend/app.py
 
   build-frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend 
     
     steps:
     - uses: actions/checkout@v2
@@ -34,7 +37,6 @@ jobs:
         node-version: '21'
     - name: Install Node dependencies
       run: |
-        cd frontend
         npm install
     - name: Build React app
       run: |
