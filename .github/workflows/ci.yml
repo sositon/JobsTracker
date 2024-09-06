@@ -1,0 +1,41 @@
+name: Basic CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+    - name: Install Python dependencies
+      run: |
+        pip install -r backend/requirements.txt
+    - name: Check if Flask runs
+      run: |
+        python backend/run.py
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '21'
+    - name: Install Node dependencies
+      run: |
+        cd frontend
+        npm install
+    - name: Build React app
+      run: |
+        npm run build
