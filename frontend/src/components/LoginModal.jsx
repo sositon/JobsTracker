@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
-import axios from 'axios';
+import { useAppContext } from '../AppContext';
 
 const LoginModal = ({ show, handleClose, toggleToRegister }) => {
+  const { login } = useAppContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -12,20 +13,10 @@ const LoginModal = ({ show, handleClose, toggleToRegister }) => {
     e.preventDefault();
     setLoading(true); 
     setError('');
-    try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
-        "email": email.toLowerCase(),
-        password,
-      });
-      console.log(response.data);
-      setLoading(false);
-      setError('');
-      handleClose(response);
-    } catch (err) {
-      setLoading(false);
-      setError('Login failed. Please check your credentials.');
-      console.error(err);
-    }
+    await login(email, password);
+    setLoading(false);
+    setError('');
+    handleClose();
   };
 
   return (
