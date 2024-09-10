@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
-import { Home, LogOutIcon } from 'lucide-react';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import { Home, LogOut, LogIn } from 'lucide-react';
 import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
 import { useAppContext } from '../AppContext';
@@ -18,10 +18,6 @@ const Header = () => {
     }
   };
 
-  const loginModalClose = () => {
-    setShowLoginModal(false);
-  };
-
   return (
     <>
       <Navbar bg="light" expand="lg" className="shadow-sm">
@@ -33,23 +29,45 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
             <Nav>
-              <Nav.Link onClick={onLoginClick} className="btn btn-outline-primary me-2">
-                {isLoggedIn ? <LogOutIcon className='me-2' size={24}/> : "Login"}
-              </Nav.Link>
+              <Button
+                variant={isLoggedIn ? "outline-danger" : "outline-primary"}
+                onClick={onLoginClick}
+                className="d-flex align-items-center"
+              >
+                {isLoggedIn ? (
+                  <>
+                    <LogOut className="me-2" size={18} />
+                    Logout
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="me-2" size={18} />
+                    Login
+                  </>
+                )}
+              </Button>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
 
-      <LoginModal show={showLoginModal} handleClose={loginModalClose} toggleToRegister={() => {
-        setShowLoginModal(false); 
-        setShowRegisterModal(true);
-      }}/>
+      <LoginModal
+        show={showLoginModal}
+        handleClose={() => setShowLoginModal(false)}
+        toggleToRegister={() => {
+          setShowLoginModal(false);
+          setShowRegisterModal(true);
+        }}
+      />
 
-      <RegisterModal show={showRegisterModal} handleClose={() => setShowRegisterModal(false)} toggleToLogin={() => {
-        setShowRegisterModal(false); 
-        setShowLoginModal(true);
-      }}/>
+      <RegisterModal
+        show={showRegisterModal}
+        handleClose={() => setShowRegisterModal(false)}
+        toggleToLogin={() => {
+          setShowRegisterModal(false);
+          setShowLoginModal(true);
+        }}
+      />
     </>
   );
 };

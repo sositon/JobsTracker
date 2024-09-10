@@ -10,7 +10,6 @@ const App = () => {
     <AppProvider>
       <div className="container">
         <Header />
-        <h1 className='text-center'>Job Applications</h1>
         <JobApplicationsTable />
       </div>
     </AppProvider>

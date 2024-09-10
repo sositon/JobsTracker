@@ -13,10 +13,13 @@ const LoginModal = ({ show, handleClose, toggleToRegister }) => {
     e.preventDefault();
     setLoading(true); 
     setError('');
-    await login(email, password);
+    try {
+      await login(email, password);
+      handleClose();
+    } catch (err) {
+      setError('Login failed. Please check your credentials.');
+    }
     setLoading(false);
-    setError('');
-    handleClose();
   };
 
   return (
@@ -27,7 +30,6 @@ const LoginModal = ({ show, handleClose, toggleToRegister }) => {
       <Modal.Body>
         {error && <Alert variant="danger">{error}</Alert>}
         <Form onSubmit={handleLogin}>
-
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control
@@ -59,13 +61,12 @@ const LoginModal = ({ show, handleClose, toggleToRegister }) => {
             {loading ? 'Logging in...' : 'Login'}
           </Button>
 
-          <Form.Text className="text-center">
-            Don't have an account yet? 
-            <span style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }} onClick={toggleToRegister}>
-            Register here
-            </span>
-          </Form.Text>
-
+          <div className="text-center mt-3">
+            <span>Don't have an account? </span>
+            <Button variant="link" className="p-0" onClick={toggleToRegister}>
+              Register here
+            </Button>
+          </div>
         </Form>
       </Modal.Body>
     </Modal>

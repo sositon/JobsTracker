@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import { EllipsisVertical, Trash2Icon } from 'lucide-react';
-import { Badge, Button, Form } from 'react-bootstrap';
+import { Button, Badge, Form } from 'react-bootstrap';
+import { EllipsisVertical, Trash2 } from 'lucide-react';
 
 const JobApplicationRow = memo(({ job, onViewDetails, editingCell, onCellClick, onCellChange, onCellBlur, onDeleteJob }) => {
   const statusVariant = {
@@ -18,7 +18,7 @@ const JobApplicationRow = memo(({ job, onViewDetails, editingCell, onCellClick, 
           value={value || ''}
           onChange={(e) => onCellChange(e, job.id, field)}
           onBlur={onCellBlur}
-          autoFocus={true}
+          autoFocus
         />
       );
     }
@@ -33,20 +33,27 @@ const JobApplicationRow = memo(({ job, onViewDetails, editingCell, onCellClick, 
 
   return (
     <tr>
-      <td className="text-center" onClick={() => onCellClick(job.id, 'job_title')}>{renderCell('job_title', job.job_title)}</td>
-      <td className="text-center" onClick={() => onCellClick(job.id, 'company_name')}>{renderCell('company_name', job.company_name)}</td>
-      <td className="text-center" onClick={() => onCellClick(job.id, 'company_location')}>{renderCell('company_location', job.company_location)}</td>
-      <td className="text-center" onClick={() => onCellClick(job.id, 'application_date')}>{renderCell('application_date', job.application_date)}</td>
-      <td className="text-center" onClick={() => onCellClick(job.id, 'application_status')}>{renderCell('application_status', job.application_status)}</td>
-      <td className="text-center" onClick={() => onCellClick(job.id, 'application_method')}>{renderCell('application_method', job.application_method)}</td>
-      <td className="text-center">
-        {
-          <Button data-testid="more-details-button" variant="primary" size="sm" onClick={() => onViewDetails(job)}>
-            <EllipsisVertical size={16} />
-          </Button>
-        }
-        <Button data-testid="delete-job-button" variant="danger" size="sm" className="ms-2" onClick={() => onDeleteJob(job.id)}>
-          <Trash2Icon size={16} />
+      <td onClick={() => onCellClick(job.id, 'job_title')}>{renderCell('job_title', job.job_title)}</td>
+      <td onClick={() => onCellClick(job.id, 'company_name')}>{renderCell('company_name', job.company_name)}</td>
+      <td onClick={() => onCellClick(job.id, 'company_location')}>{renderCell('company_location', job.company_location)}</td>
+      <td onClick={() => onCellClick(job.id, 'application_date')}>{renderCell('application_date', job.application_date)}</td>
+      <td onClick={() => onCellClick(job.id, 'application_status')}>{renderCell('application_status', job.application_status)}</td>
+      <td onClick={() => onCellClick(job.id, 'application_method')}>{renderCell('application_method', job.application_method)}</td>
+      <td>
+        <Button
+          variant="outline-primary"
+          size="sm"
+          onClick={() => onViewDetails(job)}
+          className="me-2"
+        >
+          <EllipsisVertical size={16} />
+        </Button>
+        <Button
+          variant="outline-danger"
+          size="sm"
+          onClick={() => onDeleteJob(job.id)}
+        >
+          <Trash2 size={16} />
         </Button>
       </td>
     </tr>

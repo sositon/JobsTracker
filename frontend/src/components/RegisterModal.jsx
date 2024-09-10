@@ -30,7 +30,7 @@ const RegisterModal = ({ show, handleClose, toggleToLogin }) => {
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, {
-        "user_name": username,
+        user_name: username,
         email,
         password,
       });
@@ -52,12 +52,11 @@ const RegisterModal = ({ show, handleClose, toggleToLogin }) => {
       <Modal.Body>
         {error && <Alert variant="danger">{error}</Alert>}
         <Form onSubmit={handleRegister}>
-
-          <Form.Group className='mb-3' controlId='formBasicUsername'>
+          <Form.Group className="mb-3" controlId="formBasicUsername">
             <Form.Label>Username</Form.Label>
             <Form.Control
-              type='text'
-              placeholder='Enter username'
+              type="text"
+              placeholder="Enter username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -96,20 +95,17 @@ const RegisterModal = ({ show, handleClose, toggleToLogin }) => {
               required
             />
           </Form.Group>
-        
+
           <Button variant="primary" type="submit" className="w-100" disabled={loading}>
             {loading ? <Spinner animation="border" size="sm" /> : 'Register'}
           </Button>
-        
-        <Form.Text className="text-center mt-3">
-          Already have an account?{' '}
-          <span
-            style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
-            onClick={toggleToLogin}
-          >
-            Log in
-          </span>
-        </Form.Text>
+
+          <div className="text-center mt-3">
+            <span>Already have an account? </span>
+            <Button variant="link" className="p-0" onClick={toggleToLogin}>
+              Log in
+            </Button>
+          </div>
         </Form>
       </Modal.Body>
     </Modal>
