@@ -18,6 +18,7 @@ const JobApplicationRow = memo(({ job, onViewDetails, editingCell, onCellClick, 
           value={value || ''}
           onChange={(e) => onCellChange(e, job.id, field)}
           onBlur={onCellBlur}
+          autoFocus={true}
         />
       );
     }
@@ -40,11 +41,11 @@ const JobApplicationRow = memo(({ job, onViewDetails, editingCell, onCellClick, 
       <td className="text-center" onClick={() => onCellClick(job.id, 'application_method')}>{renderCell('application_method', job.application_method)}</td>
       <td className="text-center">
         {
-          <Button variant="primary" size="sm" onClick={() => onViewDetails(job)}>
+          <Button data-testid="more-details-button" variant="primary" size="sm" onClick={() => onViewDetails(job)}>
             <EllipsisVertical size={16} />
           </Button>
         }
-        <Button variant="danger" size="sm" className="ms-2" onClick={() => onDeleteJob(job.id)}>
+        <Button data-testid="delete-job-button" variant="danger" size="sm" className="ms-2" onClick={() => onDeleteJob(job.id)}>
           <Trash2Icon size={16} />
         </Button>
       </td>

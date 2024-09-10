@@ -3,6 +3,7 @@ import { Modal, Table, Button } from 'react-bootstrap';
 import { Plus } from 'lucide-react';
 import JobApplicationRow from './JobApplicationRow';
 import { useAppContext } from '../AppContext';
+import { logger } from '../utils/logger';
 
 const JobApplicationsTable = () => {
   const { jobs, addJob, updateJob, deleteJob, isLoggedIn} = useAppContext();
@@ -27,6 +28,7 @@ const JobApplicationsTable = () => {
     }}, [jobs, updateJob]);
 
   const handleCellBlur = useCallback(() => {
+    logger.info('Cell blur event');
     setEditingCell(null);
   }, []);
 
@@ -35,7 +37,7 @@ const JobApplicationsTable = () => {
         job_title: '',
         company_name: '',
         company_location: '',
-        application_date: new Date().toISOString().split('T')[0],
+        application_date: new Date().toISOString().split('T')[0], 
         application_status: '',
         application_method: '',
         });
