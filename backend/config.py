@@ -13,6 +13,6 @@ class Config:
     JWT_ACCESS_COOKIE_NAME = 'access_token_cookie'
     JWT_ACCESS_CSRF_COOKIE_NAME = 'csrf_access_token'
     JWT_COOKIE_HTTPONLY = True
-    JWT_EXPIRATION_DELTA = 3600
+    JWT_ACCESS_TOKEN_EXPIRES = 3600
 
     CORS_HEADERS = 'Content-Type'
