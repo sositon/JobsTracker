@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
+import { logger } from './utils/logger';
 
 axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = "csrf_access_token";
@@ -11,7 +12,6 @@ export const AppProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [jobs, setJobs] = useState([]);
 
-  // auth.py is the file that contains the login and logout routes
   const login = async (email, password) => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
@@ -19,13 +19,13 @@ export const AppProvider = ({ children }) => {
         password,
       }, { withCredentials: true });
       if (response.status === 200) {
-        console.log('Login successful:', response.data);
+        logger.info('Login successful', { email });
         setIsLoggedIn(true);
         fetchJobs();
       }
       return response;
     } catch (error) {
-      console.error('Login error:', error);
+      logger.error('Login error', { error: error.message, email });
       throw error;
     }
   };
@@ -34,64 +34,63 @@ export const AppProvider = ({ children }) => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/logout`, {}, { withCredentials: true });
       if (response.status === 200) {
-        console.log('Logout successful:', response.data);
+        logger.info('Logout successful');
         setIsLoggedIn(false);
         setJobs([]);
       }
     } catch (error) {
-      console.error('Logout error:', error);
+      logger.error('Logout error', { error: error.message });
     }
   };
 
-  // job_applications.py is the file that contains the job applications routes
   const fetchJobs = useCallback(async () => {
-    await axios.get(`${process.env.REACT_APP_API_URL}/job-applications`, { withCredentials: true })
-      .then((response) => {
-        setJobs(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching jobs:', error);
-    });
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/job-applications`, { withCredentials: true });
+      setJobs(response.data);
+      logger.info('Jobs fetched successfully', { count: response.data.length });
+    } catch (error) {
+      logger.error('Error fetching jobs', { error: error.message });
+    }
   }, []);
 
   const addJob = (newJob) => {
     axios.post(`${process.env.REACT_APP_API_URL}/job-applications`, newJob, { withCredentials: true })
       .then((response) => {
-        console.log('Job added:', response.data);
+        logger.info('Job added successfully', { jobId: response.data.id });
         setJobs([...jobs, response.data]);
       })
       .catch((error) => {
-        console.error('Error adding job:', error);
+        logger.error('Error adding job', { error: error.message, job: newJob });
       });
   };
 
   const updateJob = (updatedJob) => {
     if (updatedJob === undefined || updatedJob.id === undefined) {
-      console.error('Invalid job:', updatedJob);
+      logger.error('Invalid job for update', { job: updatedJob });
       return;
     }
     setJobs(jobs.map(job => job.id === updatedJob.id ? updatedJob : job));
     axios.put(`${process.env.REACT_APP_API_URL}/job-applications/${updatedJob.id}`, updatedJob, { withCredentials: true })
       .then((response) => {
-        console.log('Job updated:', response.data);
+        logger.info('Job updated successfully', { jobId: updatedJob.id });
       })
       .catch((error) => {
-        console.error('Error updating job:', error);
+        logger.error('Error updating job', { error: error.message, jobId: updatedJob.id });
       });
   };
 
   const deleteJob = (jobId) => {
-    console.log('Deleting job:', jobId);
     if (jobId === undefined) {
+      logger.error('Invalid job ID for deletion', { jobId });
       return;
     }
     setJobs(jobs.filter(job => job.id !== jobId));
     axios.delete(`${process.env.REACT_APP_API_URL}/job-applications/${jobId}`, { withCredentials: true })
       .then((response) => {
-        console.log('Job deleted:', response.data);
+        logger.info('Job deleted successfully', { jobId });
       })
       .catch((error) => {
-        console.error('Error deleting job:', error);
+        logger.error('Error deleting job', { error: error.message, jobId });
       });
   };
 
@@ -101,19 +100,22 @@ export const AppProvider = ({ children }) => {
         if (response.status === 200) {
           setIsLoggedIn(true);
           fetchJobs();
+          logger.info('User authenticated');
         }
       })
       .catch((err) => {
         if (err.response?.status === 401) {
-          console.log('User is not logged in');
+          logger.info('User is not logged in');
           setIsLoggedIn(false);
+        } else {
+          logger.error('Error checking auth status', { error: err.message });
         }
       });
   }, [fetchJobs]);
 
   useEffect(() => {
     checkAuthStatus();
-  }, []);
+  }, [checkAuthStatus]);
 
   return (
     <AppContext.Provider value={{
