@@ -35,7 +35,7 @@ const JobApplicationsTable = () => {
         job_title: '',
         company_name: '',
         company_location: '',
-        application_date: new Date().toISOString(),
+        application_date: new Date().toISOString().split('T')[0],
         application_status: '',
         application_method: '',
         });
