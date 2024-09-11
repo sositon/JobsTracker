@@ -5,8 +5,23 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#3490dc',
-        'primary-dark': '#2779bd',
+        purple: {
+          100: '#F3E8FF',
+          500: '#8B5CF6',
+          600: '#7C3AED',
+        },
+        pink: {
+          100: '#FCE7F3',
+          500: '#EC4899',
+        },
+        yellow: {
+          300: '#FDE047',
+          400: '#FACC15',
+        },
+      },
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif'],
+        display: ['Montserrat', 'sans-serif'],
       },
     },
   },

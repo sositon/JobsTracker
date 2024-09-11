@@ -1,4 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 /* Example customization */
+@layer components{
 .btn-primary {
     @apply bg-primary text-white;
   }
@@ -6,5 +10,5 @@
   .btn-primary:hover {
     @apply bg-primary-dark;
   }
-  
+}
   /* Add more customizations as needed */
