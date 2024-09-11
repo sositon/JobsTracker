@@ -1,5 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
+import './custom-bootstrap.css';
 import Header from './components/Header';
 import JobApplicationsTable from './components/JobApplicationsTable';
 import { AppProvider } from './AppContext';

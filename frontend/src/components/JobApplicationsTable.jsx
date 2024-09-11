@@ -58,17 +58,19 @@ const JobApplicationsTable = () => {
   ];
 
   return (
-    <Card className="mt-4 shadow-sm">
-      <Card.Body>
-        <Card.Title as="h2" className="mb-4">Job Applications</Card.Title>
-        <div className="table-responsive">
-          <Table striped bordered hover>
-            <thead>
+    <Card className="mt-4 shadow-lg rounded-lg overflow-hidden">
+      <Card.Body className="p-0">
+        <div className="p-4 bg-gray-50 border-b">
+          <Card.Title as="h2" className="text-2xl font-bold text-gray-800">Job Applications</Card.Title>
+        </div>
+        <div className="overflow-x-auto">
+          <Table responsive hover className="mb-0">
+            <thead className="bg-gray-100">
               <tr>
                 {columns.map(column => (
-                  <th key={column.key}>{column.label}</th>
+                  <th key={column.key} className="py-3 px-4 text-start text-sm font-semibold text-gray-600 uppercase tracking-wider">{column.label}</th>
                 ))}
-                <th>Actions</th>
+                <th className="py-3 px-4 text-start text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -87,31 +89,33 @@ const JobApplicationsTable = () => {
             </tbody>
           </Table>
         </div>
-        <Button
-          variant="primary"
-          onClick={handleAddNewJob}
-          disabled={!isLoggedIn}
-          className="mt-3"
-        >
-          <Plus size={16} className="me-2" /> Add job application
-        </Button>
+        <div className="p-4 bg-gray-50 border-t">
+          <Button
+            variant="primary"
+            onClick={handleAddNewJob}
+            disabled={!isLoggedIn}
+            className="flex items-center justify-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark transition-colors duration-300"
+          >
+            <Plus size={16} className="mr-2" /> Add job application
+          </Button>
+        </div>
       </Card.Body>
 
-      <Modal show={showDetails} onHide={() => setShowDetails(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Job Details</Modal.Title>
+      <Modal show={showDetails} onHide={() => setShowDetails(false)} centered>
+        <Modal.Header closeButton className="border-b-0">
+          <Modal.Title className="text-xl font-bold text-primary">Job Details</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="px-4 py-5">
           {selectedJob && (
-            <>
-              <p><strong>Job Title:</strong> {selectedJob.job_title}</p>
-              <p><strong>Company:</strong> {selectedJob.company_name}</p>
-              <p><strong>Location:</strong> {selectedJob.company_location}</p>
-              <p><strong>Application Date:</strong> {new Date(selectedJob.application_date).toLocaleDateString()}</p>
-              <p><strong>Application Method:</strong> {selectedJob.application_method}</p>
-              <p><strong>Application Status:</strong> {selectedJob.application_status}</p>
-              {selectedJob.job_description && <p><strong>Job Description:</strong> {selectedJob.job_description}</p>}
-            </>
+            <div className="space-y-3">
+              <p><strong className="text-gray-700">Job Title:</strong> <span className="text-gray-900">{selectedJob.job_title}</span></p>
+              <p><strong className="text-gray-700">Company:</strong> <span className="text-gray-900">{selectedJob.company_name}</span></p>
+              <p><strong className="text-gray-700">Location:</strong> <span className="text-gray-900">{selectedJob.company_location}</span></p>
+              <p><strong className="text-gray-700">Application Date:</strong> <span className="text-gray-900">{new Date(selectedJob.application_date).toLocaleDateString()}</span></p>
+              <p><strong className="text-gray-700">Application Status:</strong> <span className="text-gray-900">{selectedJob.application_status}</span></p>
+              <p><strong className="text-gray-700">Application Method:</strong> <span className="text-gray-900">{selectedJob.application_method}</span></p>
+              {selectedJob.job_description && <p><strong className="text-gray-700">Job Description:</strong> <span className="text-gray-900">{selectedJob.job_description}</span></p>}
+            </div>
           )}
         </Modal.Body>
       </Modal>

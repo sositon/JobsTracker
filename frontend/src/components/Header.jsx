@@ -23,8 +23,8 @@ const Header = () => {
       <Navbar bg="light" expand="lg" className="shadow-sm">
         <Container>
           <Navbar.Brand href="/" className="d-flex align-items-center">
-            <Home className="me-2" size={24} />
-            <span className="fw-bold">Jobs Tracker</span>
+            <Home className="text-primary me-2" size={24} />
+            <span className="font-bold text-xl text-primary">Jobs Tracker</span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
@@ -32,7 +32,7 @@ const Header = () => {
               <Button
                 variant={isLoggedIn ? "outline-danger" : "outline-primary"}
                 onClick={onLoginClick}
-                className="d-flex align-items-center"
+                className="d-flex align-items-center transition-all duration-300 ease-in-out hover:scale-105"
               >
                 {isLoggedIn ? (
                   <>
