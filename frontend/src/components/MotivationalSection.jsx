@@ -24,7 +24,7 @@ const MotivationalSection = () => {
   }, []);
 
   return (
-    <Card className="bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 text-white rounded-lg shadow-lg overflow-hidden my-8">
+    <Card className="bg-gradient-to-r from-blue-400 via-red-400 to-purple-400 text-white rounded-lg shadow-lg overflow-hidden my-8">
       <Card.Body className="p-6">
         <div className="flex items-center mb-4">
           <Quote className="text-white mr-3" size={24} />

@@ -20,11 +20,13 @@ const Header = () => {
 
   return (
     <>
-      <Navbar bg="light" expand="lg" className="shadow-sm">
-        <Container>
-          <Navbar.Brand href="/" className="d-flex align-items-center">
-            <Home className="text-primary me-2" size={24} />
-            <span className="font-bold text-xl text-primary">Jobs Tracker</span>
+      <Navbar bg="transparent" expand="lg" className="shadow-md">
+        <Container className='container mx-auto'>
+          <Navbar.Brand href="/" className="text-primary text-3xl font-bold">
+            <div className="flex items-center">
+              <Home className="text-primary me-2" size={24} />
+              <span className="font-bold text-xl text-primary">DreamJob Tracker</span>
+            </div>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">

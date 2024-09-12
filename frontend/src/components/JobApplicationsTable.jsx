@@ -57,11 +57,22 @@ const JobApplicationsTable = () => {
     { key: 'application_method', label: 'Application Method' },
   ];
 
+  const getStatusBadgeColor = (status) => {
+    const statusColors = {
+      'Interview': 'bg-cyan-500',
+      'Pending': 'bg-yellow-500',
+      'Applied': 'bg-blue-500',
+      'Rejected': 'bg-red-500',
+      'Accepted': 'bg-green-500',
+    };
+    return statusColors[status] || 'bg-gray-500';
+  };
+
   return (
     <Card className="mt-4 shadow-lg rounded-lg overflow-hidden">
       <Card.Body className="p-0">
-        <div className="p-4 bg-gray-50 border-b">
-          <Card.Title as="h2" className="text-2xl font-bold text-gray-800">Job Applications</Card.Title>
+        <div className="p-4 bg-gradient-to-r from-blue-400 to-pink-400">
+          <Card.Title as="h2" className="text-2xl font-bold text-white">Your Dream Job Journey</Card.Title>
         </div>
         <div className="overflow-x-auto">
           <Table responsive hover className="mb-0">
@@ -94,25 +105,25 @@ const JobApplicationsTable = () => {
             variant="primary"
             onClick={handleAddNewJob}
             disabled={!isLoggedIn}
-            className="flex items-center justify-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark transition-colors duration-300"
+            className="flex items-center justify-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-colors duration-300"
           >
-            <Plus size={16} className="mr-2" /> Add job application
+            <Plus size={16} className="mr-2" /> Add new Dream Job
           </Button>
         </div>
       </Card.Body>
 
       <Modal show={showDetails} onHide={() => setShowDetails(false)} centered>
-        <Modal.Header closeButton className="border-b-0">
-          <Modal.Title className="text-xl font-bold text-primary">Job Details</Modal.Title>
+        <Modal.Header closeButton className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+          <Modal.Title className="text-xl font-bold">Job Details</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="px-4 py-5">
+        <Modal.Body className="px-4 py-4">
           {selectedJob && (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <p><strong className="text-gray-700">Job Title:</strong> <span className="text-gray-900">{selectedJob.job_title}</span></p>
               <p><strong className="text-gray-700">Company:</strong> <span className="text-gray-900">{selectedJob.company_name}</span></p>
               <p><strong className="text-gray-700">Location:</strong> <span className="text-gray-900">{selectedJob.company_location}</span></p>
               <p><strong className="text-gray-700">Application Date:</strong> <span className="text-gray-900">{new Date(selectedJob.application_date).toLocaleDateString()}</span></p>
-              <p><strong className="text-gray-700">Application Status:</strong> <span className="text-gray-900">{selectedJob.application_status}</span></p>
+              <p><strong className="text-gray-700">Application Status:</strong> <span className={`${getStatusBadgeColor(selectedJob.application_status)} text-white px-2 py-1 rounded-full`}>{selectedJob.application_status}</span></p>
               <p><strong className="text-gray-700">Application Method:</strong> <span className="text-gray-900">{selectedJob.application_method}</span></p>
               {selectedJob.job_description && <p><strong className="text-gray-700">Job Description:</strong> <span className="text-gray-900">{selectedJob.job_description}</span></p>}
             </div>
