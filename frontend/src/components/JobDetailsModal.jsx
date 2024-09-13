@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { logger } from '../utils/logger';
+import { useAppContext } from '../AppContext';
 
-const JobDetailsModal = ({ show, onHide, job, onUpdateJob }) => {
+const JobDetailsModal = ({ show, onHide, job }) => {
+  const { updateJob } = useAppContext();
   const [editMode, setEditMode] = useState(false);
   const [editedJob, setEditedJob] = useState(job);
 
@@ -18,11 +21,13 @@ const JobDetailsModal = ({ show, onHide, job, onUpdateJob }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    logger.info('Input change:', e.target.name, e.target.value);
     setEditedJob(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSave = () => {
-    onUpdateJob(editedJob);
+    logger.info('Saving edited job:', editedJob);
+    updateJob(editedJob);
     setEditMode(false);
   };
 
@@ -69,7 +74,7 @@ const JobDetailsModal = ({ show, onHide, job, onUpdateJob }) => {
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Job Description</Form.Label>
-                  <Form.Control as="textarea" rows={3} name="job_description" value={editedJob.job_description} onChange={handleInputChange} />
+                  <Form.Control as="textarea" rows={5} name="job_description" value={editedJob.job_description} onChange={handleInputChange} />
                 </Form.Group>
               </Form>
             ) : (

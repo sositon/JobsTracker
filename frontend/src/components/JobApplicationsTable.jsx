@@ -2,20 +2,12 @@ import React, { useState, useCallback } from 'react';
 import { Table, Button, Card } from 'react-bootstrap';
 import { Plus } from 'lucide-react';
 import JobApplicationRow from './JobApplicationRow';
-import JobDetailsModal from './JobDetailsModal';
 import { useAppContext } from '../AppContext';
 import { logger } from '../utils/logger';
 
 const JobApplicationsTable = () => {
   const { jobs, addJob, updateJob, deleteJob, isLoggedIn } = useAppContext();
-  const [showDetails, setShowDetails] = useState(false);
-  const [selectedJob, setSelectedJob] = useState(null);
   const [editingCell, setEditingCell] = useState(null);
-
-  const onViewDetails = useCallback((job) => {
-    setSelectedJob(job);
-    setShowDetails(true);
-  }, []);
 
   const handleCellClick = useCallback((jobId, field) => {
     logger.info('Editing cell:', jobId, field);
@@ -50,11 +42,6 @@ const JobApplicationsTable = () => {
     deleteJob(jobId);
   }, [deleteJob]);
 
-  const handleUpdateJob = useCallback((updatedJob) => {
-    updateJob(updatedJob);
-    setSelectedJob(null);
-    setShowDetails(false);
-  }, [updateJob]);
 
   const columns = [
     { key: 'job_title', label: 'Job Title' },
@@ -86,7 +73,6 @@ const JobApplicationsTable = () => {
                 <JobApplicationRow
                   key={job.id}
                   job={job}
-                  onViewDetails={onViewDetails}
                   editingCell={editingCell}
                   onCellClick={handleCellClick}
                   onCellChange={handleCellChange}
@@ -108,13 +94,6 @@ const JobApplicationsTable = () => {
           </Button>
         </div>
       </Card.Body>
-
-      <JobDetailsModal
-        show={showDetails}
-        onHide={() => setShowDetails(false)}
-        job={selectedJob}
-        onUpdateJob={handleUpdateJob}
-      />
     </Card>
   );
 };
