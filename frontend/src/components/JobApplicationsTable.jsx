@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { Modal, Table, Button, Card } from 'react-bootstrap';
+import { Table, Button, Card } from 'react-bootstrap';
 import { Plus } from 'lucide-react';
 import JobApplicationRow from './JobApplicationRow';
+import JobDetailsModal from './JobDetailsModal';
 import { useAppContext } from '../AppContext';
 import { logger } from '../utils/logger';
 
@@ -41,12 +42,19 @@ const JobApplicationsTable = () => {
       application_date: new Date().toISOString().split('T')[0],
       application_status: '',
       application_method: '',
+      job_description: '',
     });
   }, [addJob]);
 
   const handleDeleteJob = useCallback((jobId) => {
     deleteJob(jobId);
   }, [deleteJob]);
+
+  const handleUpdateJob = useCallback((updatedJob) => {
+    updateJob(updatedJob);
+    setSelectedJob(null);
+    setShowDetails(false);
+  }, [updateJob]);
 
   const columns = [
     { key: 'job_title', label: 'Job Title' },
@@ -57,21 +65,10 @@ const JobApplicationsTable = () => {
     { key: 'application_method', label: 'Application Method' },
   ];
 
-  const getStatusBadgeColor = (status) => {
-    const statusColors = {
-      'Interview': 'bg-cyan-500',
-      'Pending': 'bg-yellow-500',
-      'Applied': 'bg-blue-500',
-      'Rejected': 'bg-red-500',
-      'Accepted': 'bg-green-500',
-    };
-    return statusColors[status] || 'bg-gray-500';
-  };
-
   return (
     <Card className="mt-4 shadow-lg rounded-lg overflow-hidden">
       <Card.Body className="p-0">
-        <div className="p-4 bg-gradient-to-r from-blue-400 to-pink-400">
+        <div className="p-4 bg-gradient-to-r from-blue-500 to-purple-600">
           <Card.Title as="h2" className="text-2xl font-bold text-white">Your Dream Job Journey</Card.Title>
         </div>
         <div className="overflow-x-auto">
@@ -112,24 +109,12 @@ const JobApplicationsTable = () => {
         </div>
       </Card.Body>
 
-      <Modal show={showDetails} onHide={() => setShowDetails(false)} centered>
-        <Modal.Header closeButton className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-          <Modal.Title className="text-xl font-bold">Job Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="px-4 py-4">
-          {selectedJob && (
-            <div className="space-y-4">
-              <p><strong className="text-gray-700">Job Title:</strong> <span className="text-gray-900">{selectedJob.job_title}</span></p>
-              <p><strong className="text-gray-700">Company:</strong> <span className="text-gray-900">{selectedJob.company_name}</span></p>
-              <p><strong className="text-gray-700">Location:</strong> <span className="text-gray-900">{selectedJob.company_location}</span></p>
-              <p><strong className="text-gray-700">Application Date:</strong> <span className="text-gray-900">{new Date(selectedJob.application_date).toLocaleDateString()}</span></p>
-              <p><strong className="text-gray-700">Application Status:</strong> <span className={`${getStatusBadgeColor(selectedJob.application_status)} text-white px-2 py-1 rounded-full`}>{selectedJob.application_status}</span></p>
-              <p><strong className="text-gray-700">Application Method:</strong> <span className="text-gray-900">{selectedJob.application_method}</span></p>
-              {selectedJob.job_description && <p><strong className="text-gray-700">Job Description:</strong> <span className="text-gray-900">{selectedJob.job_description}</span></p>}
-            </div>
-          )}
-        </Modal.Body>
-      </Modal>
+      <JobDetailsModal
+        show={showDetails}
+        onHide={() => setShowDetails(false)}
+        job={selectedJob}
+        onUpdateJob={handleUpdateJob}
+      />
     </Card>
   );
 };
