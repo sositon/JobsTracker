@@ -1,12 +1,13 @@
 import React, { useState, useCallback } from 'react';
-import { Modal, Table, Button } from 'react-bootstrap';
+import { Table, Button, Card } from 'react-bootstrap';
 import { Plus } from 'lucide-react';
 import JobApplicationRow from './JobApplicationRow';
+import JobDetailsModal from './JobDetailsModal';
 import { useAppContext } from '../AppContext';
 import { logger } from '../utils/logger';
 
 const JobApplicationsTable = () => {
-  const { jobs, addJob, updateJob, deleteJob, isLoggedIn} = useAppContext();
+  const { jobs, addJob, updateJob, deleteJob, isLoggedIn } = useAppContext();
   const [showDetails, setShowDetails] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const [editingCell, setEditingCell] = useState(null);
@@ -17,15 +18,16 @@ const JobApplicationsTable = () => {
   }, []);
 
   const handleCellClick = useCallback((jobId, field) => {
-    console.log('Editing cell:', jobId, field);
+    logger.info('Editing cell:', jobId, field);
     setEditingCell({ jobId, field });
   }, []);
 
   const handleCellChange = useCallback((e, jobId, field) => {
     const updatedJob = jobs.find(job => job.id === jobId);
     if (updatedJob) {
-        updateJob({ ...updatedJob, [field]: e.target.value });
-    }}, [jobs, updateJob]);
+      updateJob({ ...updatedJob, [field]: e.target.value });
+    }
+  }, [jobs, updateJob]);
 
   const handleCellBlur = useCallback(() => {
     logger.info('Cell blur event');
@@ -34,18 +36,25 @@ const JobApplicationsTable = () => {
 
   const handleAddNewJob = useCallback(async () => {
     await addJob({
-        job_title: '',
-        company_name: '',
-        company_location: '',
-        application_date: new Date().toISOString().split('T')[0], 
-        application_status: '',
-        application_method: '',
-        });
+      job_title: '',
+      company_name: '',
+      company_location: '',
+      application_date: new Date().toISOString().split('T')[0],
+      application_status: '',
+      application_method: '',
+      job_description: '',
+    });
   }, [addJob]);
 
   const handleDeleteJob = useCallback((jobId) => {
     deleteJob(jobId);
   }, [deleteJob]);
+
+  const handleUpdateJob = useCallback((updatedJob) => {
+    updateJob(updatedJob);
+    setSelectedJob(null);
+    setShowDetails(false);
+  }, [updateJob]);
 
   const columns = [
     { key: 'job_title', label: 'Job Title' },
@@ -57,58 +66,56 @@ const JobApplicationsTable = () => {
   ];
 
   return (
-    <>
-      <Table striped bordered hover responsive="md" className="mt-3">
-        <thead>
-          <tr>
-            {columns.map(column => (
-              <th key={column.key}>{column.label}</th>
-            ))}
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {jobs.map((job) => (
-            <JobApplicationRow
-              key={job.id}
-              job={job}
-              onViewDetails={onViewDetails}
-              editingCell={editingCell}
-              onCellClick={handleCellClick}
-              onCellChange={handleCellChange}
-              onCellBlur={handleCellBlur}
-              onDeleteJob={handleDeleteJob}
-            />
-          ))}
-          <tr>
-            <td colSpan={columns.length + 1}>
-              {(
-                <Button variant="link" onClick={handleAddNewJob} disabled={!isLoggedIn}>
-                  <Plus size={16} /> Add job application
-                </Button>
-              )}
-            </td>
-          </tr>
-        </tbody>
-      </Table>
+    <Card className="mt-4 shadow-lg rounded-lg overflow-hidden">
+      <Card.Body className="p-0">
+        <div className="p-4 bg-gradient-to-r from-blue-500 to-purple-600">
+          <Card.Title as="h2" className="text-2xl font-bold text-white">Your Dream Job Journey</Card.Title>
+        </div>
+        <div className="overflow-x-auto">
+          <Table responsive hover className="mb-0">
+            <thead className="bg-gray-100">
+              <tr>
+                {columns.map(column => (
+                  <th key={column.key} className="py-3 px-4 text-start text-sm font-semibold text-gray-600 uppercase tracking-wider">{column.label}</th>
+                ))}
+                <th className="py-3 px-4 text-start text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {jobs.map((job) => (
+                <JobApplicationRow
+                  key={job.id}
+                  job={job}
+                  onViewDetails={onViewDetails}
+                  editingCell={editingCell}
+                  onCellClick={handleCellClick}
+                  onCellChange={handleCellChange}
+                  onCellBlur={handleCellBlur}
+                  onDeleteJob={handleDeleteJob}
+                />
+              ))}
+            </tbody>
+          </Table>
+        </div>
+        <div className="p-4 bg-gray-50 border-t">
+          <Button
+            variant="primary"
+            onClick={handleAddNewJob}
+            disabled={!isLoggedIn}
+            className="flex items-center justify-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-colors duration-300"
+          >
+            <Plus size={16} className="mr-2" /> Add new Dream Job
+          </Button>
+        </div>
+      </Card.Body>
 
-      {selectedJob && (
-        <Modal show={showDetails} onHide={() => setShowDetails(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Job Details</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p><strong>Job Title:</strong> {selectedJob.job_title}</p>
-            <p><strong>Company:</strong> {selectedJob.company_name}</p>
-            <p><strong>Location:</strong> {selectedJob.company_location}</p>
-            <p><strong>Application Date:</strong> {new Date(selectedJob.application_date).toLocaleDateString()}</p>
-            <p><strong>Application Method:</strong> {selectedJob.application_method}</p>
-            <p><strong>Application Status:</strong> {selectedJob.application_status}</p>
-            {selectedJob.job_description && <p><strong>Job Description:</strong> {selectedJob.job_description}</p>}
-          </Modal.Body>
-        </Modal>
-      )}
-    </>
+      <JobDetailsModal
+        show={showDetails}
+        onHide={() => setShowDetails(false)}
+        job={selectedJob}
+        onUpdateJob={handleUpdateJob}
+      />
+    </Card>
   );
 };
 

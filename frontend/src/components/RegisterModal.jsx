@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Alert, Spinner } from 'react-bootstrap';
+import { Mail, Lock, User } from 'lucide-react';
 import axios from 'axios';
 
 const RegisterModal = ({ show, handleClose, toggleToLogin }) => {
@@ -30,7 +31,7 @@ const RegisterModal = ({ show, handleClose, toggleToLogin }) => {
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, {
-        "user_name": username,
+        user_name: username,
         email,
         password,
       });
@@ -47,72 +48,93 @@ const RegisterModal = ({ show, handleClose, toggleToLogin }) => {
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Register</Modal.Title>
+        <Modal.Title className="text-2xl font-bold text-primary">Register</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        {error && <Alert variant="danger">{error}</Alert>}
+      <Modal.Body className="px-4 py-5">
+        {error && <Alert variant="danger" className="mb-4">{error}</Alert>}
+
         <Form onSubmit={handleRegister}>
 
-          <Form.Group className='mb-3' controlId='formBasicUsername'>
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type='text'
-              placeholder='Enter username'
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
+          {/* Username field */}
+          <Form.Group className="mb-4 relative" controlId="formBasicUsername">
+            <Form.Label className="text-gray-700">Username</Form.Label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <Form.Control
+                type="text"
+                placeholder="Enter username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                className="pl-10 py-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+              />
+            </div>
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+          {/* Email field */}
+          <Form.Group className="mb-4 relative" controlId="formBasicEmail">
+            <Form.Label className="text-gray-700">Email address</Form.Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="pl-10 py-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+              />
+            </div>
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+          {/* Password field */}
+          <Form.Group className="mb-4 relative" controlId="formBasicPassword">
+            <Form.Label className="text-gray-700">Password</Form.Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <Form.Control
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="pl-10 py-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+              />
+            </div>
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicConfirmPassword">
-            <Form.Label>Confirm Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
+          {/* Confirm Password field */}
+          <Form.Group className="mb-4 relative" controlId="formBasicConfirmPassword">
+            <Form.Label className="text-gray-700">Confirm Password</Form.Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <Form.Control
+                type="password"
+                placeholder="Confirm password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className="pl-10 py-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+              />
+            </div>
           </Form.Group>
-        
-          <Button variant="primary" type="submit" className="w-100" disabled={loading}>
+
+          {/* Submit button */}
+          <Button variant="primary" type="submit" className="w-full py-2 text-white bg-primary hover:bg-primary-dark transition-colors duration-300" disabled={loading}>
             {loading ? <Spinner animation="border" size="sm" /> : 'Register'}
           </Button>
-        
-        <Form.Text className="text-center mt-3">
-          Already have an account?{' '}
-          <span
-            style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
-            onClick={toggleToLogin}
-          >
-            Log in
-          </span>
-        </Form.Text>
+
+          {/* Toggle to Login link */}
+          <div className="text-center mt-4">
+            <span className="text-gray-600">Already have an account? </span>
+            <Button variant="link" className="p-0 text-primary hover:text-primary-dark" onClick={toggleToLogin}>
+              Log in
+            </Button>
+          </div>
         </Form>
       </Modal.Body>
     </Modal>
+
   );
 };
 

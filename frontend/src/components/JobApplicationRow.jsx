@@ -1,14 +1,18 @@
 import React, { memo } from 'react';
-import { EllipsisVertical, Trash2Icon } from 'lucide-react';
-import { Badge, Button, Form } from 'react-bootstrap';
+import { Button, Badge, Form } from 'react-bootstrap';
+import { Info, Trash2, Edit2 } from 'lucide-react';
 
 const JobApplicationRow = memo(({ job, onViewDetails, editingCell, onCellClick, onCellChange, onCellBlur, onDeleteJob }) => {
-  const statusVariant = {
-    Pending: 'warning',
-    Interview: 'info',
-    Accepted: 'success',
-    Rejected: 'danger',
-  }[job.application_status] || 'secondary';
+  const getStatusBadgeColor = (status) => {
+    const statusColors = {
+      'Interview': 'bg-cyan-500',
+      'Pending': 'bg-yellow-500',
+      'Applied': 'bg-blue-500',
+      'Rejected': 'bg-red-500',
+      'Accepted': 'bg-green-500',
+    };
+    return statusColors[status] || 'bg-gray-500';
+  };
 
   const renderCell = (field, value) => {
     if (editingCell?.jobId === job.id && editingCell?.field === field) {
@@ -18,36 +22,44 @@ const JobApplicationRow = memo(({ job, onViewDetails, editingCell, onCellClick, 
           value={value || ''}
           onChange={(e) => onCellChange(e, job.id, field)}
           onBlur={onCellBlur}
-          autoFocus={true}
+          autoFocus
+          className="w-full p-1 text-sm"
         />
       );
     }
     if (field === 'application_status') {
-      return <Badge bg={statusVariant}>{value}</Badge>;
+      return (
+        <Badge className={`${getStatusBadgeColor(value)} text-white px-2 py-1 rounded-full`}>
+          {value || '-'}
+        </Badge>
+      );
     }
     if (field === 'application_date') {
-      return new Date(value).toLocaleDateString();
+      return value ? new Date(value).toLocaleDateString() : '-';
     }
     return value || '-';
   };
 
   return (
-    <tr>
-      <td className="text-center" onClick={() => onCellClick(job.id, 'job_title')}>{renderCell('job_title', job.job_title)}</td>
-      <td className="text-center" onClick={() => onCellClick(job.id, 'company_name')}>{renderCell('company_name', job.company_name)}</td>
-      <td className="text-center" onClick={() => onCellClick(job.id, 'company_location')}>{renderCell('company_location', job.company_location)}</td>
-      <td className="text-center" onClick={() => onCellClick(job.id, 'application_date')}>{renderCell('application_date', job.application_date)}</td>
-      <td className="text-center" onClick={() => onCellClick(job.id, 'application_status')}>{renderCell('application_status', job.application_status)}</td>
-      <td className="text-center" onClick={() => onCellClick(job.id, 'application_method')}>{renderCell('application_method', job.application_method)}</td>
-      <td className="text-center">
-        {
-          <Button data-testid="more-details-button" variant="primary" size="sm" onClick={() => onViewDetails(job)}>
-            <EllipsisVertical size={16} />
+    <tr className="hover:bg-gray-50 transition-colors duration-150 ease-in-out">
+      <td onClick={() => onCellClick(job.id, 'job_title')} className="py-3 px-4 text-sm text-gray-900">{renderCell('job_title', job.job_title)}</td>
+      <td onClick={() => onCellClick(job.id, 'company_name')} className="py-3 px-4 text-sm text-gray-900">{renderCell('company_name', job.company_name)}</td>
+      <td onClick={() => onCellClick(job.id, 'company_location')} className="py-3 px-4 text-sm text-gray-900">{renderCell('company_location', job.company_location)}</td>
+      <td onClick={() => onCellClick(job.id, 'application_date')} className="py-3 px-4 text-sm text-gray-900">{renderCell('application_date', job.application_date)}</td>
+      <td onClick={() => onCellClick(job.id, 'application_status')} className="py-3 px-4 text-sm text-gray-900">{renderCell('application_status', job.application_status)}</td>
+      <td onClick={() => onCellClick(job.id, 'application_method')} className="py-3 px-4 text-sm text-gray-900">{renderCell('application_method', job.application_method)}</td>
+      <td className="py-3 px-4 text-sm">
+        <div className="flex space-x-2">
+          <Button variant="outline-info" size="sm" onClick={() => onViewDetails(job)} className="p-1">
+            <Info size={16} />
           </Button>
-        }
-        <Button data-testid="delete-job-button" variant="danger" size="sm" className="ms-2" onClick={() => onDeleteJob(job.id)}>
-          <Trash2Icon size={16} />
-        </Button>
+          <Button variant="outline-danger" size="sm" onClick={() => onDeleteJob(job.id)} className="p-1">
+            <Trash2 size={16} />
+          </Button>
+          <Button variant="outline-primary" size="sm" onClick={() => onCellClick(job.id, 'job_title')} className="p-1">
+            <Edit2 size={16} />
+          </Button>
+        </div>
       </td>
     </tr>
   );
