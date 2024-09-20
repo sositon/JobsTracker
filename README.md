@@ -16,14 +16,6 @@
 - [📄 Description](#-description)
 - [🚀 Features](#-features)
 - [🛠️ Technologies Used](#️-technologies-used)
-- [🖥️ High-Level Architecture](#-high-level-architecture)
-- [🔧 Installation](#️-installation)
-- [⚙️ Configuration](#-configuration)
-- [📚 Usage](#-usage)
-- [📷 Screenshots](#-screenshots)
-- [🤝 Contributing](#-contributing)
-- [📜 License](#-license)
-- [📫 Contact](#-contact)
 
 ## 📄 Description
 
