@@ -15,6 +15,7 @@ Flask-SQLAlchemy==3.0.5
 future==1.0.0
 gevent==22.10.2
 greenlet==3.0.3
+gunicorn==23.0.0
 idna==3.7
 importlib-metadata==6.7.0
 importlib-resources==5.12.0
