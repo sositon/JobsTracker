@@ -15,7 +15,7 @@ def test():
 def register():
     data = request.get_json()
     # check if user_name already exists
-    if User.query.filter_by(user_name=data['user_name']).first():
+    if User.query.filter_by(email=data['email']).first():
         return jsonify({"msg": "User name already exists"}), 400
     # create new user
     user = User(user_name=data['user_name'], email=data['email'])
